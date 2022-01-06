@@ -1,11 +1,44 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'aliyun deploy'
+description: 'deploy frontend project to aliyun'
+author: 'Daniel glf'
+branding:
+  icon: 'award'  
+  color: 'green'
 inputs:
-  milliseconds: # change this
+  ssh_username:
+    required: true 
+    description: 'ssh username'
+    default: ${{ secrets.DEFAULT_SSH_USERNAME }}
+  ssh_password:
+    required: true 
+    description: 'ssh password'
+    default: ${{ secrets.DEFAULT_SSH_PASSWORD }}
+  ssh_host:
+    required: true 
+    description: 'ssh host'
+    default: ${{ secrets.DEFAULT_SSH_HOST }}
+  remote_path:
+    required: true 
+    description: 'project path, like /home/frontend/project-1'
+  remote_path_prev:
+    required: false 
+    description: 'project prev path, like /home/frontend/project-1'
+  dist_path_name:
+    required: false 
+    description: 'need to deploy file path, when deploy multiple dir, will create parent dir'
+    default: 'dist'
+  build_exec:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+    description: 'project build exec'
+    default: 'build'
+  need_merge:
+    required: false 
+    description: 'need to collection file or dir, use with merge_file_dir'  
+    default: false 
+  merge_file_dir:
+    required: false 
+    description: 'merge file and dir name map, like filename.js,dirname'  
+
 runs:
   using: 'node12'
   main: 'dist/index.js'

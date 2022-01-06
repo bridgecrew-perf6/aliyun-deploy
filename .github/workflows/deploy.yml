@@ -1,0 +1,43 @@
+name: build
+on: 
+  push: 
+    branches: 
+      - main
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2 
+        with:
+          persist-credentials: false
+
+      - name: Install and Build 🔧 
+        run: |
+          npm install yarn -g 
+          yarn 
+          yarn ${{ secrets.BUILD_EXEC }}
+      
+      # custom action merge file 
+      - uses: ./
+
+      - name: createTag 🚀 
+        uses: appleboy/ssh-action@master
+        with:
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          host: ${{ secrets.SSH_HOST }}
+          script: |
+            rm -rf ${{ secrets.REMOTE_PATH_PREV }}
+            mkdir -p ${{ secrets.REMOTE_PATH }}
+            mv ${{ secrets.REMOTE_PATH }} ${{ secrets.REMOTE_PATH_PREV }}
+
+      - name: Deploy 🚀
+        uses: garygrossgarten/github-action-scp@release
+        with:
+          local: ./${{ secrets.DIST_PATH_NAME }}/
+          remote: ${{ secrets.REMOTE_PATH }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+           
