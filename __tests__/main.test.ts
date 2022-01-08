@@ -2,10 +2,7 @@ import * as process from 'process'
 import * as cp from 'child_process'
 import * as path from 'path'
 import {expect, test} from '@jest/globals'
-import {
-  isFileAndDirValid,
-  formatFileAndDirValue
-} from '../src/file-and-dir-valid'
+import {isFileAndDirValid} from '../src/file-and-dir-valid'
 
 test('input type not valid', async () => {
   const input = ''
