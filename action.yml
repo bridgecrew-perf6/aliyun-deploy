@@ -26,6 +26,14 @@ inputs:
   merge_file_dir:
     required: false 
     description: 'merge file and dir name map, like filename.js,dirname'  
+  remote_action_install:
+    required: false 
+    description: 'service install action'
+    default: echo 'hello world'
+  remote_action_start:
+    required: false 
+    description: 'service start server'
+    default: echo 'hello world'
 
 runs:
   using: 'node12'

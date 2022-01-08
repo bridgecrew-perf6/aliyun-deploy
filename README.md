@@ -1,105 +1,89 @@
-<p align="center">
-  <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
-</p>
+<!-- <p align="center">
+  <a href="https://github.com/actions/checkout"><img alt="GitHub Actions status" src="https://github.com/actions/checkout/workflows/test-local/badge.svg"></a>
+</p> -->
 
-# Create a JavaScript Action using TypeScript
+# Aliyun-deploy
 
-Use this template to bootstrap the creation of a TypeScript action.:rocket:
+这个是自己用的把前端项目部署的阿里云服务器的一个`action`集合。  
 
-This template includes compilation support, tests, a validation workflow, publishing, and versioning guidance.  
+# Process  
+- 切换分支到`main`  
+- 安装依赖  
+- 打包  
+- 合并文件夹(可选)  
+- 服务器备份上一版本文件内容  
+- 上传当前版本文件内容  
+- 进入服务器项目目录进行特殊操作  
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+# Attention  
 
-## Create an action from this template
+这是自己使用的部署`action`，如果需要使用的话请`clone`此项目，并在项目中添加`secrets`:  
+- SSH_USERNAME  
+- SSH_PASSWORD  
+- SSH_HOST  
+# Usage
 
-Click the `Use this Template` and provide the new repo details for your action
+<!-- start usage -->
+```yaml
+- uses: actions/aliyun-deploy-@v1
+  with:
+    # 服务器上的路径
+    remote_path: '/home/to/project'
 
-## Code in Main
+    # 服务器用于保存上一版本的路径
+    remote_path_prev: '/home/to/project-prev'
 
-> First, you'll need to have a reasonably modern version of `node` handy. This won't work with versions older than 9, for instance.
+    # 项目的打包文件夹名称
+    # default: dist 
+    dist_path_name: ''
 
-Install the dependencies  
-```bash
-$ npm install
+    # 打包命令
+    # default: build 
+    build_exec-key: ''
+
+    # 是否需要上传多个文件 | 文件夹
+    # 配合merge_file_dir使用
+    # default: false 
+    need_merge: 'false'
+
+    # 需要上传的文件 | 文件夹地址  
+    # 配合 need_merge 使用  
+    merge_file_dir: './dist,./package.json'
+
+    # 服务器项目目录安装命令
+    remote_action_install: yarn -production
+
+    # 服务器项目目录启动命令
+    remote_action_start: yarn start:production
+
 ```
+<!-- end usage -->
 
-Build the typescript and package it for distribution
-```bash
-$ npm run build && npm run package
-```
 
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
-
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
-
-...
-```
-
-## Change action.yml
-
-The action.yml defines the inputs and output for your action.
-
-Update the action.yml with your name, description, inputs and outputs for your action.
-
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
-
-## Change the Code
-
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
-
-```javascript
-import * as core from '@actions/core';
-...
-
-async function run() {
-  try { 
-      ...
-  } 
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
-
-run()
-```
-
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
-
-## Publish to a distribution branch
-
-Actions are run from GitHub repos so we will checkin the packed dist folder. 
-
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-```bash
-$ npm run package
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
-
-Note: We recommend using the `--license` option for ncc, which will create a license file for all of the production node modules used in your project.
-
-Your action is now published! :rocket: 
-
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-
-## Validate
-
-You can now validate the action by referencing `./` in a workflow in your repo (see [test.yml](.github/workflows/test.yml))
+## 设置打包文件夹名称
 
 ```yaml
-uses: ./
-with:
-  milliseconds: 1000
+- uses: actions/aliyun-deploy-@v1
+  with:
+    dist_path_name: 'build'
 ```
 
-See the [actions tab](https://github.com/actions/typescript-action/actions) for runs of this action! :rocket:
+## 设置项目特殊的打包命令
 
-## Usage:
+```yaml
+- uses: actions/aliyun-deploy-@v1
+  with:
+    build_exec: 'build:production'
+```
 
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
+## 合并文件夹
+
+```yaml
+- uses: actions/aliyun-deploy-@v1
+  with:
+    dist_path_name: 'build'
+    need_merge: 'true'
+    merge_file_dir: './dist,./.nuxt,./package.json,.nuxt.config.js'
+```
+
+
