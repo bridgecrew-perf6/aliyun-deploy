@@ -25,7 +25,7 @@
 
 <!-- start usage -->
 ```yaml
-- uses: actions/aliyun-deploy-@v1
+- uses: actions/aliyun-deploy-for-self@v1
   with:
     # 服务器上的路径
     remote_path: '/home/to/project'
@@ -63,7 +63,7 @@
 ## 设置打包文件夹名称
 
 ```yaml
-- uses: actions/aliyun-deploy-@v1
+- uses: actions/aliyun-deploy-for-self@v1
   with:
     dist_path_name: 'build'
 ```
@@ -71,7 +71,7 @@
 ## 设置项目特殊的打包命令
 
 ```yaml
-- uses: actions/aliyun-deploy-@v1
+- uses: actions/aliyun-deploy-for-self@v1
   with:
     build_exec: 'build:production'
 ```
@@ -79,7 +79,7 @@
 ## 合并文件夹
 
 ```yaml
-- uses: actions/aliyun-deploy-@v1
+- uses: actions/aliyun-deploy-for-self@v1
   with:
     dist_path_name: 'build'
     need_merge: 'true'
