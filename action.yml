@@ -5,18 +5,6 @@ branding:
   icon: 'award'  
   color: 'green'
 inputs:
-  ssh_username:
-    required: true 
-    description: 'ssh username'
-    default: ${{ secrets.DEFAULT_SSH_USERNAME }}
-  ssh_password:
-    required: true 
-    description: 'ssh password'
-    default: ${{ secrets.DEFAULT_SSH_PASSWORD }}
-  ssh_host:
-    required: true 
-    description: 'ssh host'
-    default: ${{ secrets.DEFAULT_SSH_HOST }}
   remote_path:
     required: true 
     description: 'project path, like /home/frontend/project-1'
@@ -28,13 +16,13 @@ inputs:
     description: 'need to deploy file path, when deploy multiple dir, will create parent dir'
     default: 'dist'
   build_exec:
-    required: true
+    required: false
     description: 'project build exec'
     default: 'build'
   need_merge:
     required: false 
     description: 'need to collection file or dir, use with merge_file_dir'  
-    default: false 
+    default: 'false' 
   merge_file_dir:
     required: false 
     description: 'merge file and dir name map, like filename.js,dirname'  
