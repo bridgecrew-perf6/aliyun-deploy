@@ -1808,7 +1808,7 @@ module.exports = copy
 "use strict";
 
 
-const u = __nccwpck_require__(746)/* .fromCallback */ .E
+const u = __nccwpck_require__(9046).fromCallback
 module.exports = {
   copy: u(__nccwpck_require__(8834))
 }
@@ -1822,7 +1822,7 @@ module.exports = {
 "use strict";
 
 
-const u = __nccwpck_require__(746)/* .fromPromise */ .p
+const u = __nccwpck_require__(9046).fromPromise
 const fs = __nccwpck_require__(1176)
 const path = __nccwpck_require__(5622)
 const mkdir = __nccwpck_require__(2915)
@@ -1869,7 +1869,7 @@ module.exports = {
 "use strict";
 
 
-const u = __nccwpck_require__(746)/* .fromCallback */ .E
+const u = __nccwpck_require__(9046).fromCallback
 const path = __nccwpck_require__(5622)
 const fs = __nccwpck_require__(7758)
 const mkdir = __nccwpck_require__(2915)
@@ -1977,7 +1977,7 @@ module.exports = {
 "use strict";
 
 
-const u = __nccwpck_require__(746)/* .fromCallback */ .E
+const u = __nccwpck_require__(9046).fromCallback
 const path = __nccwpck_require__(5622)
 const fs = __nccwpck_require__(7758)
 const mkdir = __nccwpck_require__(2915)
@@ -2195,7 +2195,7 @@ module.exports = {
 "use strict";
 
 
-const u = __nccwpck_require__(746)/* .fromCallback */ .E
+const u = __nccwpck_require__(9046).fromCallback
 const path = __nccwpck_require__(5622)
 const fs = __nccwpck_require__(1176)
 const _mkdirs = __nccwpck_require__(2915)
@@ -2286,7 +2286,7 @@ module.exports = {
 
 // This is adapted from https://github.com/normalize/mz
 // Copyright (c) 2014-2016 Jonathan Ong me@jongleberry.com and Contributors
-const u = __nccwpck_require__(746)/* .fromCallback */ .E
+const u = __nccwpck_require__(9046).fromCallback
 const fs = __nccwpck_require__(7758)
 
 const api = [
@@ -2438,7 +2438,7 @@ module.exports = {
 "use strict";
 
 
-const u = __nccwpck_require__(746)/* .fromPromise */ .p
+const u = __nccwpck_require__(9046).fromPromise
 const jsonFile = __nccwpck_require__(8970)
 
 jsonFile.outputJson = u(__nccwpck_require__(531))
@@ -2520,7 +2520,7 @@ module.exports = outputJson
 
 "use strict";
 
-const u = __nccwpck_require__(746)/* .fromPromise */ .p
+const u = __nccwpck_require__(9046).fromPromise
 const { makeDir: _makeDir, makeDirSync } = __nccwpck_require__(2751)
 const makeDir = u(_makeDir)
 
@@ -2682,7 +2682,7 @@ module.exports = moveSync
 "use strict";
 
 
-const u = __nccwpck_require__(746)/* .fromCallback */ .E
+const u = __nccwpck_require__(9046).fromCallback
 module.exports = {
   move: u(__nccwpck_require__(2231))
 }
@@ -2777,7 +2777,7 @@ module.exports = move
 "use strict";
 
 
-const u = __nccwpck_require__(746)/* .fromCallback */ .E
+const u = __nccwpck_require__(9046).fromCallback
 const fs = __nccwpck_require__(7758)
 const path = __nccwpck_require__(5622)
 const mkdir = __nccwpck_require__(2915)
@@ -2824,7 +2824,7 @@ module.exports = {
 
 "use strict";
 
-const u = __nccwpck_require__(746)/* .fromPromise */ .p
+const u = __nccwpck_require__(9046).fromPromise
 const fs = __nccwpck_require__(1176)
 
 function pathExists (path) {
@@ -2846,7 +2846,7 @@ module.exports = {
 
 
 const fs = __nccwpck_require__(7758)
-const u = __nccwpck_require__(746)/* .fromCallback */ .E
+const u = __nccwpck_require__(9046).fromCallback
 const rimraf = __nccwpck_require__(8761)
 
 function remove (path, callback) {
@@ -3370,38 +3370,6 @@ function utimesMillisSync (path, atime, mtime) {
 module.exports = {
   utimesMillis,
   utimesMillisSync
-}
-
-
-/***/ }),
-
-/***/ 746:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-
-exports.E = function (fn) {
-  return Object.defineProperty(function (...args) {
-    if (typeof args[args.length - 1] === 'function') fn.apply(this, args)
-    else {
-      return new Promise((resolve, reject) => {
-        fn.call(
-          this,
-          ...args,
-          (err, res) => (err != null) ? reject(err) : resolve(res)
-        )
-      })
-    }
-  }, 'name', { value: fn.name })
-}
-
-exports.p = function (fn) {
-  return Object.defineProperty(function (...args) {
-    const cb = args[args.length - 1]
-    if (typeof cb !== 'function') return fn.apply(this, args)
-    else fn.apply(this, args.slice(0, -1)).then(r => cb(null, r), cb)
-  }, 'name', { value: fn.name })
 }
 
 
@@ -4314,8 +4282,10 @@ function patch (fs) {
     return function (target, options) {
       var stats = options ? orig.call(fs, target, options)
         : orig.call(fs, target)
-      if (stats.uid < 0) stats.uid += 0x100000000
-      if (stats.gid < 0) stats.gid += 0x100000000
+      if (stats) {
+        if (stats.uid < 0) stats.uid += 0x100000000
+        if (stats.gid < 0) stats.gid += 0x100000000
+      }
       return stats;
     }
   }
@@ -4361,7 +4331,7 @@ try {
 } catch (_) {
   _fs = __nccwpck_require__(5747)
 }
-const universalify = __nccwpck_require__(7133)
+const universalify = __nccwpck_require__(9046)
 const { stringify, stripBom } = __nccwpck_require__(5902)
 
 async function _readFile (file, options = {}) {
@@ -4443,38 +4413,6 @@ const jsonfile = {
 }
 
 module.exports = jsonfile
-
-
-/***/ }),
-
-/***/ 7133:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-
-exports.fromCallback = function (fn) {
-  return Object.defineProperty(function (...args) {
-    if (typeof args[args.length - 1] === 'function') fn.apply(this, args)
-    else {
-      return new Promise((resolve, reject) => {
-        fn.call(
-          this,
-          ...args,
-          (err, res) => (err != null) ? reject(err) : resolve(res)
-        )
-      })
-    }
-  }, 'name', { value: fn.name })
-}
-
-exports.fromPromise = function (fn) {
-  return Object.defineProperty(function (...args) {
-    const cb = args[args.length - 1]
-    if (typeof cb !== 'function') return fn.apply(this, args)
-    else fn.apply(this, args.slice(0, -1)).then(r => cb(null, r), cb)
-  }, 'name', { value: fn.name })
-}
 
 
 /***/ }),
@@ -4776,6 +4714,38 @@ if (process.env.NODE_DEBUG && /\btunnel\b/.test(process.env.NODE_DEBUG)) {
   debug = function() {};
 }
 exports.debug = debug; // for test
+
+
+/***/ }),
+
+/***/ 9046:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+exports.fromCallback = function (fn) {
+  return Object.defineProperty(function (...args) {
+    if (typeof args[args.length - 1] === 'function') fn.apply(this, args)
+    else {
+      return new Promise((resolve, reject) => {
+        fn.call(
+          this,
+          ...args,
+          (err, res) => (err != null) ? reject(err) : resolve(res)
+        )
+      })
+    }
+  }, 'name', { value: fn.name })
+}
+
+exports.fromPromise = function (fn) {
+  return Object.defineProperty(function (...args) {
+    const cb = args[args.length - 1]
+    if (typeof cb !== 'function') return fn.apply(this, args)
+    else fn.apply(this, args.slice(0, -1)).then(r => cb(null, r), cb)
+  }, 'name', { value: fn.name })
+}
 
 
 /***/ }),
